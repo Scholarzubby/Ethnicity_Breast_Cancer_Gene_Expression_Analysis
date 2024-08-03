@@ -181,8 +181,8 @@ subsetnewmetadatalevel<- factor(SECTECTNEWMETADATROW2$tissue, levels = c("Norma"
 subsetnewmetadatalevelfactor <- lapply(subsetnewmetadatalevel, as.factor)
 
 #dds <- DESeqDataSetFromMatrix(countData = nonadata2, 
-                              #colData = subsetnewmetadatalevelfactor,
-                              #design = ~ tissue)
+#colData = subsetnewmetadatalevelfactor,
+#design = ~ tissue)
 
 dim(nonadata2)
 
@@ -335,7 +335,13 @@ result_name <- resultsNames(dds)
 #to remove intercept from the results
 resultname2 <- result_name[-1]
 resultname2
+
+#shrink fold change
+#didnt work for shrinking the data
+#res_shrunken <- lfcShrink(dds, coef = result_name, res = res)
+#worked for shrinking the data
 res_shrunken <- lfcShrink(dds, coef =2 )
+#chane to data frame
 res_shrunkendf <- as.data.frame(res_shrunken)
 #res_shrunken <- lfcShrink(dds, coef = result_name, res = res)
 
@@ -353,5 +359,6 @@ flt_vs_fc <- as.data.frame(res$log2FoldChange)
 head(flt_vs_fc)
 
 plotMA(res_shrunken, ylim = c(-2, 2))
+
 
 

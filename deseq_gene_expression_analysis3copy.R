@@ -181,8 +181,8 @@ subsetnewmetadatalevel<- factor(SECTECTNEWMETADATROW2$tissue, levels = c("Norma"
 subsetnewmetadatalevelfactor <- lapply(subsetnewmetadatalevel, as.factor)
 
 #dds <- DESeqDataSetFromMatrix(countData = nonadata2, 
-                              #colData = subsetnewmetadatalevelfactor,
-                              #design = ~ tissue)
+#colData = subsetnewmetadatalevelfactor,
+#design = ~ tissue)
 
 dim(nonadata2)
 
