@@ -239,7 +239,7 @@ dds <- DESeqDataSetFromMatrix(nonadata22, condition, ~ tissue)
 
 
 ######################################################################################
-IMPORTANT CODE USED FOR RUNNING MY ANALYSIS
+#IMPORTANT CODE USED FOR RUNNING MY ANALYSIS
 ##########################################################################################
 data <- read.delim("GSE229005_raw_data.txt")
 #filter NA in data
@@ -354,4 +354,46 @@ head(flt_vs_fc)
 
 plotMA(res_shrunken, ylim = c(-2, 2))
 
+newsubset <-subset(SECTECTNEWMETADATROW2, country == "Nig")
 
+newsubsetnig <-subset(SECTECTNEWMETADATROW2, country == "Nig")
+
+rownames(newsubsetnig) & colnames(nonadata2)
+
+#preparing to extract the sample ids form col to row in order to match the data and select nig data for analysis
+#first seecting the col in coldata that has the sample ids 
+nigcolnames <- select(nigsubdata, c(2))
+#turn the cols to row names
+colnames(nigcolnames) <- nigcolnames[1:20020,]
+rownamescol <- nigcolnames[2,]
+rownames(nigcolnames) <- make.names( nigcolnames[,1], unique = TRUE)
+row.names()
+rownamescol$row.names(nigcolnames)
+
+#transposing data to make first column rownames
+nigcolnamestrans <- setNames(data.frame(t(nigcolnames[, -1])), nigcolnames[ , 1])
+niganalysisdata <- inner_join(nonadata2, nigcolnamestrans)
+commoncolnig <- generics::intersect(nonadata2, nigcolnamestrans)
+intersectcol <- intersect(colnames(nonadata2), colnames(nigcolnamestrans))
+#mergenigcol <- merge(nonadata2, nigcolnamestrans, by.x = nonadata2, by.y = nigcolnamestrans)
+mergenigcol<- as.data.frame(intersect(names(nonadata2), names(nigcolnamestrans)))
+mergenigcol2<- as.data.frame(intersect(colnames(nonadata2), colnames(nigcolnamestrans)))
+mergenigcol3 <-  setNames(data.frame(t(mergenigcol2[, -1])), mergenigcol2[ , 1])
+mergenigcol3trans <-  setNames(data.frame(t(mergenigcol2[, -1])), mergenigcol2[ , 1])
+niganalysisdata <- inner_join(nonadata2, mergenigcol3trans)
+intersectcol2 <- intersect(colnames(nonadata2), colnames(mergenigcol3trans))
+###generics::intersect(nonadata2, newsubsetnig)
+
+#selecting columuns with nigeria data
+nigfirstset <- nonadata22[ ,1:160]
+nigsecondset <- nonadata22[ ,267:285]
+nigthirdtset <- nonadata22[ ,329:331]
+
+#merging te selected data
+mergednigdata <- merge(nigfirstset, nigsecondset)
+mergednigdata <- merge(mergednigdata, nigthirdtset)
+#checking if the subseted nig meta and counts data are the same
+rownames(newsubsetnig) == colnames(mergednigdata)
+
+###########################################################################################
+#this analysis is to compare the gene expression of different breast caner subtypes in Nigerian breast cancer patients
