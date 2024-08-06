@@ -397,3 +397,47 @@ rownames(newsubsetnig) == colnames(mergednigdata)
 
 ###########################################################################################
 #this analysis is to compare the gene expression of different breast caner subtypes in Nigerian breast cancer patients
+###########################################################################################
+
+conditionnig <- select(newsubsetnig, c(2))
+conditionnig$tissue <- factor(conditionnig$tissue, levels = c("Normal", "Basal", "Her2", "LumA", "LumB"))
+
+mergednigdata2 <- mergednigdata[1:110,]
+ddsnig <- DESeqDataSetFromMatrix(mergednigdata2, conditionnig, ~ tissue)
+
+ddsnig <- ddsnig[rowSums(counts(dds)>2) >=4]
+ddsnig <-DESeq(ddsnig)
+resultsNames(ddsnig)
+
+resnig <- results(ddsnig)
+
+basalresultsnig <- results(ddsnig, name =  "tissue_Basal_vs_Normal" )
+#resdf - this dataset in global environment side is the same as resdfbasal data set below
+resdfbasalnig <- as.data.frame(basalresultsnig)
+
+
+summary(resdfbasalnig$log2FoldChange )
+
+#save the resultsnames into a variable
+result_namenig <- resultsNames(ddsnig)
+#to remove intercept from the results
+resultnamenig2 <- result_namenig[-1]
+resultnamenig2
+res_shrunkennig <- lfcShrink(ddsnig, coef =2 )
+res_shrunkendfnig <- as.data.frame(res_shrunkennig)
+#res_shrunken <- lfcShrink(dds, coef = result_name, res = res)
+
+
+#reslfc <- lfcshrink(resdfbasal, coef = 2)
+
+(resnigOrdered<- resnig[order(resnig$padj),])
+summary(res_shrunkennig)
+#just tried with res below and the result was different from that of res_shrunkedf
+#summary(res)
+
+
+normal_vs_basal <- as.data.frame(resnig$log2FoldChange)
+
+head(normal_vs_basal )
+
+plotMA(res_shrunkennig, ylim = c(-2, 2))
