@@ -441,3 +441,66 @@ normal_vs_basal <- as.data.frame(resnig$log2FoldChange)
 head(normal_vs_basal )
 
 plotMA(res_shrunkennig, ylim = c(-2, 2))
+
+
+
+
+normal_vs_basal <- as.data.frame(resnig$log2FoldChange)
+
+head(normal_vs_basal )
+
+plotMA(res_shrunkennig, ylim = c(-2, 2), colNonsig = "")
+
+ggplot(resnig, aes(x = log10(baseMean), y = log2FoldChange, colour = 1)) + geom_point()
+
+plotMA(res_shrunken, ylim = c(-2, 2))
+
+plotMA(res, ylim = c(-2, 2), colNonSig = "gray32", colSig = "red3",)
+
+plotMA(res_shrunken, ylim = c(-2, 2), colNonSig = "gray32", colSig = "red3",)
+
+plotMA(res_shrunkendf, ylim = c(-2, 2), colNonSig = "gray32", colSig = "red3", colLine = "ff000080", log = "x", cex = 0.45, xlab = "mean expression", ylab = "log fold change")
+
+
+
+###########################################################################################
+#getting biological context through pathway analysis
+###########################################################################################
+#installing packages
+if (!requireNamespace("BiocManager", quietly = TRUE))
+  install.packages("BiocManager")
+
+BiocManager::install("AnnotationDbi")
+
+#installation
+if (!requireNamespace("BiocManager", quietly = TRUE))
+  install.packages("BiocManager")
+
+BiocManager::install("org.Hs.eg.db")
+library(AnnotationDbi)
+
+
+#############################################################################################
+#normalize the dds data
+############################################################################################
+ddsnig <-DESeq(ddsnig)
+
+normcount <- counts(dds, normalized = T)
+heatmap1 <- as.data.frame(normcount)
+heatmap2 <- as.data.frame(resOrdered)
+heatmap3 <- as.data.frame(resOrdered)
+#add yes or no column
+heatmap2$sig <- ifelse(heatmap2$padj <= 0.05, "yes", 'no')
+#ma plot
+ggplot(heatmap2, aes(x = log10 (baseMean), y = log2FoldChange, colour = sig)) + geom_point()
+
+
+#volcano plot
+ggplot(heatmap2, aes(x = log2FoldChange, y = -log10(padj), colour = sig)) + geom_point()
+
+#pheatmap
+signs <- subset(heatmap2, padj <= 0.05)
+signs2 <- subset(heatmap3, padj <= 0.05)
+
+#merge and filter
+allsigns <- merge(heatmap1, , by = 0)
