@@ -504,3 +504,13 @@ signs2 <- subset(heatmap3, padj <= 0.05)
 
 #merge and filter
 allsigns <- merge(heatmap1, , by = 0)
+
+#trying to select columuns that match the data of country of interest
+#this diffculty is to be used the filtered from metadata (coldata) with specific contries to extract the
+#info in countdata wih is based on ID and not country.
+#nigmatch<- mergenigcol3trans[, names(mergenigcol3trans) %in% names(nonadata2)]
+#nigmatchwithvalue <- rows_update(nigmatch, nonadata2) -- error from this code made me realised i swicthed X and Y
+#The error message was All columns in `y` must exist in `x`. the problem was that i made the bigger dataframe Y,
+#while the x was now the smaller data thats the subsetted dataframe
+#I then swicthed x and y in the code below and it worked
+nigmatch2<- rows_update(nonadata2, nigmatch)
