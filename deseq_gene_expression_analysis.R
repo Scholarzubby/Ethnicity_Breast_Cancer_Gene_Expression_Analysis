@@ -514,3 +514,49 @@ allsigns <- merge(heatmap1, , by = 0)
 #while the x was now the smaller data thats the subsetted dataframe
 #I then swicthed x and y in the code below and it worked
 nigmatch2<- rows_update(nonadata2, nigmatch)
+
+#filtering data to get only the Cau  patient data from coldata/metadta
+newsubsetcau <-subset(SECTECTNEWMETADATROW2, country == "Cau")
+
+#filtering data to get only the aa  patient data from coldata/metadta
+##newsubsetAA <-subset(SECTECTNEWMETADATROW2, country == "AA")
+#first seecting the col in coldata that has the sample ids 
+caucolnames <- select(causubdata, c(2))
+aacolnames <- select(aasubdata, c(2))
+
+#making rownames colnames using transpose
+caucolnamestrans <- setNames(data.frame(t(caucolnames[, -1])), caucolnames[ , 1])
+aacolnamestrans <- setNames(data.frame(t(aacolnames[, -1])), aacolnames[ , 1])
+
+#select only target patients using the same method used in the nigeria dataset to filtering and mergering the columnnames and extracting the values
+caumatch2<- !rows_update(caucolnamestrans, nonadata2)
+aamatch2<- rows_update(nonadata2, aacolnamestrans)
+#selecting the id"s of nig data
+nigcoldatamatch <- select(nonadata2, c("BC001.14", "BC002.13",,"BC003.14", "BC004.13",,"BC004.14", "BC004.14_206301581116_01_01", "BC006.12_206301581116_01_02", "BC011.13","BC016.06", "BC017.13", "BC018.13", "BC020.11_206301581116_01_08", "BC020.12", "BC023.13", "BC026.13", "BC030.13", "BC031.13", "BC033.13", "BC033.13_206422420217_01_08", "BC034.14_206422400217_01_07", "BC035.06", "BC036.13", "BC036.13_206422420217_01_09", "BC037.14", "BC041.12_206422590217_01_03", "BC041.13_206422420217_01_11", "BC044.12_31020642251_01_01", "BC044.13.1", "BC044.13.2", "BC044.14_206422550217_01_01" , "BC046.07", "BC046.12_31020642251_01_02" ,"BC046.14", "BC047.06", "BC047.10",, "BC047.14", "BC047.14_206422420217_01_01", "BC048.14", "BC048.14_206422420217_01_12", "BC051.08", "BC051.14", "BC051.14_206422550217_01_02", "BC054.13", "BC055.14","BC055.14_206422550217_01_04", "BC056.14_206422400217_01_11", "BC059.14",, "BC059.14..repeat.", "BC060.13", "BC062.14",,"BC063.13", "BC066.08","BC066.14", "BC075.13", "BC080.13", "BC081.13_206422550217_01_11", "BC082.13", "BC084.06","BC084.13",, "BC085.08","BC085.12_31020642252_01_05" , "BC088.13", "BC092.13", "BC095.13", "BC097.13", "BC098.13", "BC098.13_206422550217_01_12", "BC100.12_206422610217_01_04", "BC103.13", "BC116.13" ,"BC120.13", "BC122.13", "BC123.13",, "BC130.13", "BC133.12_31020642252_01_08", "BC133.13_206422550217_01_07", "BC134.13", "BC135.13",,"BC147.13", "BC150.13", "BC153.05", "BC154.13", "BC160.08", "BC161.13", "BC164.13", "BC169.11_31020642253_01_02", "BC178.11_31020642253_01_05", "BC190.08", "BC192.11_31020642253_01_07", "BC219.07", "BC221.06", "H100.11", "H1015.10", "H1048.12_206422610217_01_10", "H1076.13", "H108.99", "H1151.13", "H1153.13", "H1212.12_31020642253_01_09", "H1309.03", "H1318.10", "H1340.07", "H1345.06", "H135.14", "H142.14", "H151.07", "H1543.13", "H1551.12_31020642253_01_11", "H1587.14", "H1587.14_206422710217_H1626.14_03", "H1620.13", "H171.03", "H1832.12_31020642253_01_10", "H1836.09", "H1873.07", "H2016.08", "H2118.08", "H2120.04", "H2163.08", "H2165.08", "H2368.12_206422720217_01_09", "H2374.10", "H2444.07", "H2469.08", "H2491.04", "H2513.09", "h2517.08", "H2599.03", "H2741.06", "H29.12_206422720217_01_08", "H3077.08", "H3285.10", "H3286.10", "H3371.05", "H3409.09", "H499.12_206422720217_01_10", "H500.12_206422550217_01_05", "H600.13", "H601.13", "H694.13", "H76.13", "H773.03", "H806.14", "H806.14_206422710217_H1626.14_02", "H809.14", "H826.14", "H826.14_206422710217_H1626.14_06", "H840.13", "H841.13", "N010820", "N010822", "N010828", "N010829", "N010842", "N010851", "N010858", "N010862", "N010867", "N010868", "N010877", "TB154.FFPE", "TB170.FFPE", "TB170.FFPE.REPEAT", "TB180", "TB189", "TB217.FFPE", "TB245", "TB251", "TB251.FFPE.REPEAT", "TB263.FFPE", "TB280.FFPE", "TB283", "TB310.FFPE", "TB313", "X10_BX_Ng", "X13_BX_NG", "X14_BX_NG", "X15_BX_NG", "X16_BX_NG", "X3_bx_ng", "X5_bx_ng", "X6_BX_NG"
+))
+#for AA
+newsubsetaa <-subset(SECTECTNEWMETADATROW2, country == "AA")
+caucolnamestrans <- setNames(data.frame(t(caucolnames[, -1])), caucolnames[ , 1])
+aacolnamestrans2 <- setNames(data.frame(t(newsubsetaa[, -1])), newsubsetaa[ , 1])
+
+#copying out the colnames of the trans of the country data set
+colnames(aacolnamestrans)
+
+
+
+aacolnames <- select(aasubdata, c(2))
+#turn the cols to row names
+rownames(aacolnames) <- make.names( aacolnames[,1], unique = TRUE)
+
+#transposing data to make first column rownames
+aacolnamestrans <- setNames(data.frame(t(aacolnames[, -1])), aacolnames[ , 1])
+colnames(aacolnamestrans)
+#selecting the ids of aa data
+aacoldatamatch <- select(nonadata2, c("PN0102.K.T.",   "PN0103.L.T",    "PN0104.BB.T", "PN0105.VVV.T",  "PN0110.Y.T",    "PN0112.DDD.T", "PN0114.T.T",    "PN0120.H.T",    "PN0123.D.T",  "PN0124.B.T",    "PN0153.L.T",    "PN0171.ZZ.T",  "PN0172.M.T",    "PN0173.T.T",    "PN0177.L.T",   "PN0178.L.T",    "PN0179.J.T",    "PN0179.J.T.repeat" ,"PN0220.CC.T",   "PN0221.H.T",    "PN0223.C.T", "PN0224.B.T",    "PN0225.D.T",    "PN0226.N.T",   "PN0230.A.T",    "PN0231.E.T",    "PN0235.J.T",   "PN0240.E.T",    "PN0241.K.T",    "PN0246.H.T",   "PN0248.1D.T",   "PN0249.1S.T",   "PN0251.IA.T",  "PN0255.IC.T",   "PN0256.2N.T",   "PN0260.IL.T",  "PN0261.II.T",   "PN0262.ID.T",   "PN0263.IH.T",  "PN0266.II.T",   "PN0268.IQ.T",   "PN0270.IF.T",  "PN0273.II.T",   "PN0275.IB.T",   "PN0277.IF.T",  "PN0279.2C.T",   "PN0281.IJ.T",   "PN0283.IC.T",  "PN0284.IJ.T",   "PN0286.4G.T",   "PN0289.ID.T",  "PN0299.2E.T",   "PN0301.IR.T",   "PN0303.IP.T",  "PNO282.2D.T",   "X2001.062.1",   "X2001.188.1",  "X2001.221.1.brca1.mut" ,    "X2001.228.1",   "X2001.239.1",  "X2001.263.1",   "X2002.161.1.brca2.mut" ,    "X2002.212.1",  "X2002.217.1",   "X2002.97.41",   "X2003.133.1",  "X2003.166.1",   "X2003.168.1.brca1.mutated", "X2003.21.1.brca1.mutated", "X2003.85.1", "X2004.101.1",   "X2004.229.1",  "X2004.261.1",   "X2004.400.1",   "X2004.406.1",  "X2004.418.1",   "X2004.87.1.brca1.mut",  "X2005.117.1",  "X2005.184.1.brca1.methyl" , "X2005.238.1",   "X2005.259.1",  "X2005.35.1",  "X2005.54.1",    "X2006.108.1.brca1.methyl", "X2006.148.1.brca1.methyl", "X2006.53.1",  "X2006.75.1", "X93.8676S", "X98.151.6", "X98.19284" ))
+
+#for cau data
+newsubsetcau2 <-subset(SECTECTNEWMETADATROW2, country == "Cau")
+#print out rownames and copy and then paste notepad and modify
+rownames(newsubsetcau2)
+#selecting the ids of aa data
+caucoldatamatch <- select(nonadata2, c("PN0101.Q.T", "PN0107.H.T",  "PN0109.M.T", "PN0117.EE.T", "PN0118.CC.T", "PN0119.M.T",  "PN0121.AA.T", "PN0159.Y.T", "PN0160.HH.T", "PN0163.B.T", "PN0164.CC.T", "PN0165.K.T", "PN0166.J.T", "PN0167.T.T", "PN0168.R.T", "PN0169.L.T", "PN0174.P.T", "PN0175.B.T", "PN0176.P.T", "PN0180.E.T", "PN0222.L.T", "PN0227.CC.T", "PN0228.M.T", "PN0236.G.T", "PN0237.G.T", "PN0238.J.T", "PN0239.L.T", "PN0242.B.T", "PN0244.Y.T",  "PN0245.J.T", "PN0247.G.T", "PN0250.IT.T", "PN0252.IQ.T", "PN0253.IL.T", "PN0254.5H.T", "PN0258.IA.T", "PN0259.IB.T", "PN0264.IH.T", "PN0274.IK.T", "PN0276.IC.T", "PN0280.2A.T",  "PN0285.ID.T", "PN0288.IW.T", "PN0290.3I.T", "PN0291.2U.T", "PN0292.IFS.T", "PN0296.IAA.T", "PN0297.IS.T", "PN0302.IP.T", "PN0306.T.T", "PN0308.Q.T", "X2001.70.1.brca1.mut", "X2002.228.1", "X2002.59.1.brca2.mut",  "X2003.130.1.brca1.mutated", "X2004.59.1.brca2.mut", "X2004.59.1.brca2.mut.1", "X2004.59.1.brca2.mut.2", "X2004_04_1.brca2.mut", "X2005.349.1.brca1.mutated", "X2005.89.1.brca1.mutated", "X2006.35.1", "X94.13.1.brca1.mut", "X95.42.1.brca1.mut",  "X98.11.6.brca2.mut", "X99.009.01.brca1.methyl", "X99.021.42.brca1.mutated", "X99.094.1.brca1.mut", "X99.144.1.brca1.mut", "X99.144.6.brca1.mutated",  "X99.229.6",))
