@@ -7,6 +7,21 @@ if (!require("BiocManager", quietly = TRUE))
 
 BiocManager::install("org.Hs.eg.db")
 
+if (!require("BiocManager", quietly = TRUE))
+  install.packages("BiocManager")
+
+BiocManager::install("pathview")
+
+if (!require("BiocManager", quietly = TRUE))
+  install.packages("BiocManager")
+
+BiocManager::install("gage")
+
+if (!require("BiocManager", quietly = TRUE))
+  install.packages("BiocManager")
+
+BiocManager::install("gageData")
+
 #covert gene symbol to gene id
 gene <- c("ACTB", "ACTR3B" , "ADM",  "ANGPTL4", "ANLN", "AXL",  "BAG1", "BCL2", "BIRC5", "BLVRA", 
           "CAV1", "CCNB1","CCNE1","CD24", "CDC6", "CDC20","CDH3", "CENPF","CEP55","CLDN3",  
@@ -63,3 +78,53 @@ mapi
 resdf2 <- resdf
 
 install.packages("org.Hs.eg.db", repos="http://bioconductor.org/packages/3.2/bioc")
+
+library(gage)
+  library(gageData)
+data("kegg.sets.hs")
+data("sigmet.idx.hs")
+keggres =gage(exprs = foldchanges, gsets = kegg.sets.hs, same.dir = TRUE)
+data("go.subs.hs")
+data("go.sets.hs")
+library(tidyverse)
+library(dplyr)
+library(pathview)
+
+
+gobpsets = go.sets.hs[go.subs.hs$BP]
+gobpres =gage(foldchanges, gsets = gobpsets, same.dir = TRUE)
+
+keggrespathways = data.frame(id = rownames(keggres$greater, keggress$greater)) %>%
+                               tibble::as_tibble()%>%
+                               filter(row_number() <= 20) %>%
+                               .$id %>%
+                               as.character()
+
+keggrespathways
+keggresids = substr(keggrespathways, start = 1, stop = 8)
+keggresids
+tmp = sapply(keggresids, function(pid) pathview(gene.data = foldchanges, pathway.id = pid, species = "hsa"))
+#go.subs.hs$BP
+#foldchanges2 <- resdf2$log2FoldChange
+#names(foldchanges2)= resdf2$entrez
+#head(foldchanges2)
+
+
+
+#kegg.hs = kegg.gsets("human", id.type = "entrez")
+#kegg.hs.sigmet = kegg.hs$kg.sets[kegg.hs$sigmet.idx]
+
+#keggress = gage(foldchanges, gsets = kegg.hs.sigmet, same.dir = TRUE)
+#lapply(keggress, head)
+
+#greaters = keggress$greater
+#lesser = keggress$less
+
+#keggresspathways =data.frame(id = rownames(keggress$greater), keggress$greater)%>%
+  #as.data.frame()%>%
+  #rowSums(2) >=4 %>%
+  #.$id%>%
+  #as.character()
+#keggresspathways
+#row_num
+#tb
