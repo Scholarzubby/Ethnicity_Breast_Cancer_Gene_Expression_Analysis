@@ -117,110 +117,63 @@ nigbasal_vs_AAbasal <- as.data.frame(resbasalnigvsaa$log2FoldChange, row.names =
 plotMA(res_shrunkendbasalnigvscau, ylim = c(-2, 2))
 plotMA(res_shrunkendbasalnigvsaa, ylim = c(-2, 2))
 
-
-
-
-resAAbasalnormalnames <- resultsNames(ddsaabasalnormal)
-#to remove intercept from the results
-resAAbasalnormalnames2 <- resAAbasalnormalnames[-1]
-res_shrunkenAAbasalnormal <- lfcShrink(ddsaabasalnormal, coef =2 )
-res_shrunkendAAbasalnormaldf <- as.data.frame(res_shrunkenAAbasalnormal)
-
-(resOrderedAAbasalnormal<- resAAbasalnormal[order(resAAbasalnormal$padj),]) #Check this out later by followimg the tutorial because it looks irrelevant
-
-AAbasal_vs_AAnormalmain <- as.data.frame(resAAbasalnormal$log2FoldChange, row.names = row.names(resAAbasalnormal) )
-
-
-plotMA(res_shrunkenAAbasalnormal, ylim = c(-2, 2))
 #plot pca
-ddspcaAAbasalnormal = estimateSizeFactors(ddsaabasalnormal)
-seAAbasalnormal <- SummarizedExperiment(log2(counts(ddspcaAAbasalnormal, normalize = TRUE)+1), colData=colData (ddspcaAAbasalnormal))
-plotPCA(DESeqTransform(seAAbasalnormal), intgroup = "tissue")
+ddspcabasalnigvscau = estimateSizeFactors(ddsbasalnigvscau)
+sebasalnigvscau <- SummarizedExperiment(log2(counts(ddspcabasalnigvscau, normalize = TRUE)+1), colData=colData (ddspcabasalnigvscau))
+plotPCA(DESeqTransform(sebasalnigvscau), intgroup = "country")
 
-# basal and normal heatmap
-normcountAAbasalnormal <- counts(ddsaabasalnormal, normalized = T)
-heatmap1AAbasalnormal <- as.data.frame(normcountAAbasalnormal)
-heatmap2AAbasalnormal <- as.data.frame(resOrderedAAbasalnormal)
+ddspcabasalnigvsaa = estimateSizeFactors(ddsbasalnigvsaa)
+sebasalnigvsaa <- SummarizedExperiment(log2(counts(ddspcabasalnigvsaa, normalize = TRUE)+1), colData=colData (ddspcabasalnigvsaa))
+plotPCA(DESeqTransform(sebasalnigvsaa), intgroup = "country")
+
+# nig vs cau basal
+normcountbasalnigvscau <- counts(ddsbasalnigvscau, normalized = T)
+heatmap1basalnigvscau <- as.data.frame(normcountbasalnigvscau)
+heatmap2basalnigvscau <- as.data.frame(resOrderedbasalnigvscau)
 #add yes or no column
 #creating a sig col to show if the gene expression values were significant or not
-heatmap2AAbasalnormal$sig <- ifelse(heatmap2AAbasalnormal$padj <= 0.05, "yes", 'no')
+heatmap2basalnigvscau$sig <- ifelse(heatmap2basalnigvscau$padj <= 0.05, "yes", 'no')
 #ma plot
-ggplot(heatmap2AAbasalnormal, aes(x = log10 (baseMean), y = log2FoldChange, colour = sig)) + geom_point()
+ggplot(heatmap2basalnigvscau , aes(x = log10 (baseMean), y = log2FoldChange, colour = sig)) + geom_point()
 
 #volcano plot
-ggplot(heatmap2AAbasalnormal, aes(x = log2FoldChange, y = -log10(padj), colour = sig)) + geom_point()
+ggplot(heatmap2basalnigvscau, aes(x = log2FoldChange, y = -log10(padj), colour = sig)) + geom_point()
+
+# nig vs aa basal
+normcountbasalnigvsaa <- counts(ddsbasalnigvsaa, normalized = T)
+heatmap1basalnigvsaa <- as.data.frame(normcountbasalnigvsaa)
+heatmap2basalnigvsaa <- as.data.frame(resOrderedbasalnigvsaa)
+#add yes or no column
+#creating a sig col to show if the gene expression values were significant or not
+heatmap2basalnigvsaa$sig <- ifelse(heatmap2basalnigvsaa$padj <= 0.05, "yes", 'no')
+#ma plot
+ggplot(heatmap2basalnigvsaa, aes(x = log10 (baseMean), y = log2FoldChange, colour = sig)) + geom_point()
+
+#volcano plot
+ggplot(heatmap2basalnigvsaa, aes(x = log2FoldChange, y = -log10(padj), colour = sig)) + geom_point()
 
 #pheatmap
-signsAAbasalnormal <- subset(heatmap2AAbasalnormal, padj <= 0.05)
+signsbasalnigvscau <- subset(heatmap2basalnigvscau, padj <= 0.05)
 
 #merge and filter
-allsignsAAbasalnormal <- merge(heatmap1AAbasalnormal, signsAAbasalnormal , by = 0)
+allsignsbasalnigvscau <- merge(heatmap1basalnigvscau, signsbasalnigvscau , by = 0)
 
 #trial with the molhonk guy
 #sa=tarting selection from 2 cos row name is 1, to 82 not 89 inorder to get rid of the unwanted colums e.g basemean, log2foldchange etc that are not counts
-sigcountsAAbasalnormal <- allsignsAAbasalnormal[,26:41]
-row.names(sigcountsAAbasalnormal) <- allsignsAAbasalnormal$Row.names
-pheatmap::pheatmap(log2(sigcountsAAbasalnormal+1), scale = 'row' )
-
-
-
-
-
-
-
-
-
-
-
-#----------------------------------------------------------
-#to show the number up and down regulated genes between basal and normal experimental samples
-summary(resAAbasalnormal)
-
-resAAbasalnormalnames <- resultsNames(ddsaabasalnormal)
-#to remove intercept from the results
-resAAbasalnormalnames2 <- resAAbasalnormalnames[-1]
-res_shrunkenAAbasalnormal <- lfcShrink(ddsaabasalnormal, coef =2 )
-res_shrunkendAAbasalnormaldf <- as.data.frame(res_shrunkenAAbasalnormal)
-
-(resOrderedAAbasalnormal<- resAAbasalnormal[order(resAAbasalnormal$padj),]) #Check this out later by followimg the tutorial because it looks irrelevant
-
-AAbasal_vs_AAnormalmain <- as.data.frame(resAAbasalnormal$log2FoldChange, row.names = row.names(resAAbasalnormal) )
-
-
-plotMA(res_shrunkenAAbasalnormal, ylim = c(-2, 2))
-#plot pca
-ddspcaAAbasalnormal = estimateSizeFactors(ddsaabasalnormal)
-seAAbasalnormal <- SummarizedExperiment(log2(counts(ddspcaAAbasalnormal, normalize = TRUE)+1), colData=colData (ddspcaAAbasalnormal))
-plotPCA(DESeqTransform(seAAbasalnormal), intgroup = "tissue")
-
-# basal and normal heatmap
-normcountAAbasalnormal <- counts(ddsaabasalnormal, normalized = T)
-heatmap1AAbasalnormal <- as.data.frame(normcountAAbasalnormal)
-heatmap2AAbasalnormal <- as.data.frame(resOrderedAAbasalnormal)
-#add yes or no column
-#creating a sig col to show if the gene expression values were significant or not
-heatmap2AAbasalnormal$sig <- ifelse(heatmap2AAbasalnormal$padj <= 0.05, "yes", 'no')
-#ma plot
-ggplot(heatmap2AAbasalnormal, aes(x = log10 (baseMean), y = log2FoldChange, colour = sig)) + geom_point()
-
-#volcano plot
-ggplot(heatmap2AAbasalnormal, aes(x = log2FoldChange, y = -log10(padj), colour = sig)) + geom_point()
+sigcountsbasalnigvscau <- allsignsbasalnigvscau[,2:92]
+row.names(sigcountsbasalnigvscau) <- allsignsbasalnigvscau$Row.names
+pheatmap::pheatmap(log2(sigcountsbasalnigvscau+1), scale = 'row' )
 
 #pheatmap
-signsAAbasalnormal <- subset(heatmap2AAbasalnormal, padj <= 0.05)
+signsbasalnigvsaa <- subset(heatmap2basalnigvsaa, padj <= 0.05)
 
 #merge and filter
-allsignsAAbasalnormal <- merge(heatmap1AAbasalnormal, signsAAbasalnormal , by = 0)
+allsignsbasalnigvsaa <- merge(heatmap1basalnigvsaa, signsbasalnigvsaa , by = 0)
 
 #trial with the molhonk guy
 #sa=tarting selection from 2 cos row name is 1, to 82 not 89 inorder to get rid of the unwanted colums e.g basemean, log2foldchange etc that are not counts
-sigcountsAAbasalnormal <- allsignsAAbasalnormal[,26:41]
-row.names(sigcountsAAbasalnormal) <- allsignsAAbasalnormal$Row.names
-pheatmap::pheatmap(log2(sigcountsAAbasalnormal+1), scale = 'row' )
-
-
-################comparing AA and NIG  Log2foldchange######################################################
-nigaalog2foldchange <- merge(nigbasal_vs_nignormalmain, AAbasal_vs_AAnormalmain, by = 0)
-
+sigcountsbasalnigvsaa <- allsignsbasalnigvsaa[,2:106]
+row.names(sigcountsbasalnigvsaa) <- allsignsbasalnigvsaa$Row.names
+pheatmap::pheatmap(log2(sigcountsbasalnigvsaa+1), scale = 'row' )
 
 
